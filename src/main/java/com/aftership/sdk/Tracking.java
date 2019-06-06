@@ -109,7 +109,8 @@ public class Tracking {
     /**Tracking ship date tracking_ship_date*/
     private String trackingShipDate;
 
-
+    /**Tracking key of the shipment for a specific courier. Required by some couriers, such assic-teliway and total-express**/
+    private String trackingKey;
 
     public Tracking(String trackingNumber) {
         this.trackingNumber = trackingNumber;
@@ -137,6 +138,8 @@ public class Tracking {
                     trackingJSON.getString("tracking_postal_code");
             this.trackingShipDate = trackingJSON.isNull("tracking_ship_date")?null:
                     trackingJSON.getString("tracking_ship_date");
+            this.trackingKey = trackingJSON.isNull("tracking_key")?null:
+                    trackingJSON.getString("tracking_key");
 
             JSONArray smsesArray =trackingJSON.isNull("smses")?null:trackingJSON.getJSONArray("smses");
             if(smsesArray !=null && smsesArray.length()!=0){
@@ -406,6 +409,14 @@ public class Tracking {
         return trackingShipDate;
     }
 
+    public String getTrackingKey() {
+        return trackingKey;
+    }
+
+    public void setTrackingKey(String trackingKey) {
+        this.trackingKey = trackingKey;
+    }
+
     public void setTrackingShipDate(String trackingShipDate) {
         this.trackingShipDate = trackingShipDate;
     }
@@ -435,7 +446,7 @@ public class Tracking {
         if (this.trackingAccountNumber != null) trackingJSON.put("tracking_account_number", this.trackingAccountNumber);
         if (this.trackingPostalCode != null) trackingJSON.put("tracking_postal_code", this.trackingPostalCode);
         if (this.trackingShipDate != null) trackingJSON.put("tracking_ship_date", this.trackingShipDate);
-
+        if (this.trackingKey != null) trackingJSON.put("tracking_key", this.trackingKey);
         if (this.customFields != null) {
             customFieldsJSON = new JSONObject();
 
@@ -522,6 +533,10 @@ public class Tracking {
         }
         if (this.trackingShipDate!=null){
             qs.add("tracking_ship_date", this.trackingShipDate);
+            containsInfo=true;
+        }
+        if (this.trackingKey!=null){
+            qs.add("tracking_key", this.trackingKey);
             containsInfo=true;
         }
         if(containsInfo){
