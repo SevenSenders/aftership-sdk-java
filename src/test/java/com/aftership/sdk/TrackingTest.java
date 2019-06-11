@@ -97,6 +97,7 @@ public class TrackingTest {
         tracking1.setOrderIDPath("http://www.aftership.com/order_id=1234");
         tracking1.addCustomFields("product_name","iPhone Case");
         tracking1.addCustomFields("product_price","USD19.99");
+        tracking1.setTrackingKey("12345");
 
         JSONObject tracking1Json = tracking1.generateJSON();
         //System.out.println(tracking1Json);
@@ -132,20 +133,20 @@ public class TrackingTest {
 
         assertEquals("Product_price should be this value USD19.99","USD19.99",tracking1Json.getJSONObject("tracking").
                 getJSONObject("custom_fields").getString("product_price"));
-
+        assertEquals("Tracking key should be 12345", "12345", tracking1Json.getJSONObject("tracking").getString("tracking_key"));
     }
 
     @Test
     public void testTracking() throws Exception {
 
         JSONObject responseJSON;
-        responseJSON  = new JSONObject("{\"custom_fields\":{\"product_price\":\"USD19.99\",\"product_name\":\"iPhone Case\"},\"checkpoints\":[],\"signed_by\":null,\"tag\":\"Pending\",\"tracked_count\":0,\"customer_name\":\"Mr Smith\",\"origin_country_iso3\":null,\"emails\":[\"email@yourdomain.com\",\"another_email@yourdomain.com\"],\"order_id\":\"ID 1234\",\"smses\":[\"+85292345678\",\"+85292345679\"],\"title\":\"this title\",\"updated_at\":\"2014-06-12T06:59:27+00:00\",\"source\":\"api\",\"shipment_package_count\":0,\"destination_country_iso3\":\"USA\",\"expected_delivery\":null,\"unique_token\":\"ekHc21knyl\",\"shipment_type\":null,\"created_at\":\"2014-06-12T06:59:27+00:00\",\"tracking_number\":\"05167019264110\",\"active\":true,\"slug\":\"dpd\",\"order_id_path\":\"www.whatever.com\"}\n");
+        responseJSON = new JSONObject("{\"custom_fields\":{\"product_price\":\"USD19.99\",\"product_name\":\"iPhone Case\"},\"checkpoints\":[],\"signed_by\":null,\"tag\":\"Pending\",\"tracked_count\":0,\"customer_name\":\"Mr Smith\",\"origin_country_iso3\":null,\"emails\":[\"email@yourdomain.com\",\"another_email@yourdomain.com\"],\"order_id\":\"ID 1234\",\"smses\":[\"+85292345678\",\"+85292345679\"],\"title\":\"this title\",\"updated_at\":\"2014-06-12T06:59:27+00:00\",\"source\":\"api\",\"shipment_package_count\":0,\"destination_country_iso3\":\"USA\",\"expected_delivery\":null,\"unique_token\":\"ekHc21knyl\",\"shipment_type\":null,\"created_at\":\"2014-06-12T06:59:27+00:00\",\"tracking_number\":\"05167019264110\",\"tracking_key\":\"12345\",\"active\":true,\"slug\":\"dpd\",\"order_id_path\":\"www.whatever.com\"}\n");
 
         Tracking newTracking = new Tracking(responseJSON);
 
         assertEquals("Tracking_number should be 05167019264110", "05167019264110", newTracking.getTrackingNumber());
         assertEquals("Slug should be dpd", "dpd", newTracking.getSlug());
-
+        assertEquals("Tracking key should be 12345", "12345", newTracking.getTrackingKey());
         assertEquals("SignedBy should be null", null, newTracking.getSignedBy());
         assertEquals("Tag should be Pending", StatusTag.Pending, newTracking.getTag());
         assertEquals("TrackedCount should be 0", 0, newTracking.getTrackedCount());
